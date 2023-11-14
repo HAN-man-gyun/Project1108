@@ -146,7 +146,6 @@ public class TestPlayer : MonoBehaviour
         if (obj != null)
         {
             Item item = obj.ClickItem();
-            print($"{item.itemName}");
             inventory.AddItem(item);
         }
     }
