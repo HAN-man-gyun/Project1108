@@ -1,18 +1,18 @@
 using Photon.Pun;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerYoo : MonoBehaviourPun, IMovable
+public class PlayerYoo : MonoBehaviourPun
 {
     private const string HORIZONTAL = "Horizontal";
     private const string VERTICAL = "Vertical";
     private const float ZERO = 0f;
     private const float ORIGIN_MOVESPEED = 10f;
     private const State INIT_STATE = State.IDLE;
+    private const float ORIGIN_COLLECT_FASTER = 1f;
 
     private Camera mainCam;
-
+    private float collectFaster;
+    [SerializeField] private CollectableYoo collectable = null;
     [SerializeField] private State playerState;
     private State PlayerState
     {
@@ -34,13 +34,14 @@ public class PlayerYoo : MonoBehaviourPun, IMovable
     // 플레이어 상태를 나타내는 열거 형식
     enum State
     {
-        IDLE, MOVE, FISHING, HARVESTING, GATHERING
+        IDLE, MOVE, FISHING, HARVESTING, COLLECTING
     }
 
     void Awake()
     {
         mainCam = Camera.main;
         moveSpeed = ORIGIN_MOVESPEED;
+        collectFaster = ORIGIN_COLLECT_FASTER;
         playerState = INIT_STATE;
     }
 
@@ -53,12 +54,14 @@ public class PlayerYoo : MonoBehaviourPun, IMovable
     // Update is called once per frame
     void Update()
     {
-        if(!photonView.IsMine)
+        if (!photonView.IsMine)
         {
             return;
         }
         CheckMove();
         Move();
+
+        DoCollecting();
     }
 
     // 이동 키 누르는 중 인지 아닌지 체크해서 상태 변환하는 메서드
@@ -99,15 +102,67 @@ public class PlayerYoo : MonoBehaviourPun, IMovable
     // 상태 변환하는 메서드
     private void ChangeState(State toState)
     {
-        if(playerState == toState)
+        if (playerState == toState)
         {
             return;
         }
         playerState = toState;
     }
 
+    private void CheckCollectable(Collider other)
+    {
+        if (other.GetComponent<CollectableYoo>() == null)
+        {
+            return;
+        }
+
+        if (collectable == null)
+        {
+            collectable = other.GetComponent<CollectableYoo>();
+            Debug.Log("스크립트 찾음");
+        }
+    }
+
+    private void DoCollecting()
+    {
+        if (collectable == null)
+        {
+            return;
+        }
+
+        if (collectable.ThisState == CollectableYoo.State.Collectable && Input.GetKeyDown(KeyCode.Space))
+        {
+            collectable.SetCollectTime(collectable.CollectTime / collectFaster);
+            collectable.Collect();
+            Debug.Log("스크립트 찾고 메서드 실행");
+        }
+    }
+
+    private void RemoveCollectable(Collider other)
+    {
+        if (other.GetComponent<CollectableYoo>() == null)
+        {
+            return;
+        }
+
+        if (collectable != null)
+        {
+            if (collectable.ThisState == CollectableYoo.State.Collecting)
+            {
+                collectable.StopCollecting();
+            }
+            collectable = null;
+            Debug.Log("스크립트를 버렸습니다");
+        }
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        // To Do: 낚시, 채집, 기타 행동들 범위내에 들어왔을경우 체크 해야함
+        CheckCollectable(other);
+    }
+
+    private void OnTriggerExit(Collider other)
+    {
+        RemoveCollectable(other);
     }
 }
