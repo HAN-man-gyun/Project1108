@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/HHB/Scenes/Scene/Login.unity
+    path: Assets/HHB/LEGACY/Scene/Login.unity
     guid: 92910da793225324dad97128bb702fed
   - enabled: 1
-    path: Assets/HHB/Scenes/Scene/Lobby.unity
+    path: Assets/HHB/LEGACY/Scene/Lobby.unity
     guid: ed9c02cad9d96554580df4863d378336
   m_configObjects: {}
