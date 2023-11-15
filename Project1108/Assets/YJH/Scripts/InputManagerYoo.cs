@@ -21,9 +21,13 @@ public class InputManagerYoo : MonoBehaviour
     private const string VERTICAL = "Vertical";
     private const string GET_AXIS_ERROR = "해당 InputManager에서 반환 값으로 지정되지 않은 텍스트 입니다.";
 
-    public InputManagerYoo Instance;
-    private float horizon;
-    private float vertical;
+    private InputManagerYoo instance;
+    public InputManagerYoo Instance
+    {
+        get { return instance; }
+    }
+    private float horizon = 0f;
+    private float vertical = 0f;
 
     public KeyCode Up;
     public KeyCode Down;
@@ -35,7 +39,7 @@ public class InputManagerYoo : MonoBehaviour
     {
         if(Instance == null)
         {
-            Instance = this;
+            instance = this;
         }
         else if(Instance != this)
         {
@@ -47,18 +51,6 @@ public class InputManagerYoo : MonoBehaviour
         Left = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString(KEY_LEFT, ORIGIN_LEFT));
         Right = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString(KEY_RIGHT, ORIGIN_RIGHT));
         Jump = (KeyCode)System.Enum.Parse(typeof(KeyCode), PlayerPrefs.GetString(KEY_JUMP, ORIGIN_JUMP));
-    }
-    
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
     }
     
     public float GetAxis(string name)
@@ -76,15 +68,5 @@ public class InputManagerYoo : MonoBehaviour
             Debug.LogError(GET_AXIS_ERROR);
             return 0;
         }
-    }
-
-    private void SetHorizon()
-    {
-
-    }
-
-    private void SetVertical()
-    {
-
     }
 }
