@@ -9,16 +9,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5d0199c11aa6f514784c5c69cd8378d8, type: 3}
-  m_Name: PlayFabEditorPrefsSO
+  m_Script: {fileID: 11500000, guid: 3c7f62d5e74cbfc418ed016863172d87, type: 3}
+  m_Name: New Items
   m_EditorClassIdentifier: 
-  DevAccountEmail: 
-  DevAccountToken: 
-  AadAuthorization: 
-  SelectedStudio: 
-  SdkPath: 
-  EdExPath: 
-  LocalCloudScriptPath: 
-  PanelIsShown: 0
-  curMainMenuIdx: 0
-  curSubMenuIdx: 0
+  itemCode: 1
+  itemName: aaa
+  quantity: 0
+  itemImage: {fileID: 21300000, guid: 1f806a850e4ff264eafc4935f65793b8, type: 3}
+  stackAble: 0
+  itemType: 0
