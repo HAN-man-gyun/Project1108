@@ -151,12 +151,6 @@
       "dependencies": {},
       "url": "https://packages.unity.com"
     },
-    "com.unity.springbone": {
-      "version": "file:../HaonSDJson",
-      "depth": 0,
-      "source": "local",
-      "dependencies": {}
-    },
     "com.unity.test-framework": {
       "version": "1.1.33",
       "depth": 0,

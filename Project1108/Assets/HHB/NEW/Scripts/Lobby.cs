@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Lobby : MonoBehaviour
+public partial class Lobby : MonoBehaviour
 {
     public static NetworkManager Instance;
     [Header("로그인")]
@@ -30,11 +30,13 @@ public class Lobby : MonoBehaviour
 
     [Header("캐릭터UI")]
     public GameObject characterUI;
+    public GameObject character;
 
     private void Start()
     {
         PlayFabSettings.TitleId = "74971";
     }
+
     // 로그인
     public void Login()
     {
@@ -48,6 +50,10 @@ public class Lobby : MonoBehaviour
             loginInfoTxt.text = "LoginSuccess";
             loginUI.gameObject.SetActive(false);
             characterUI.gameObject.SetActive(true);
+            CameraManager.Instance.SetCharacterCamera(character);
+            //
+            Test test = GFUNC.FindTopLevelGameObject("Test").GetComponent<Test>();
+            test.InitDBWolfData();
         },
         (error) => loginInfoTxt.text = "Login Failed");
     }
