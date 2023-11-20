@@ -1,8 +1,11 @@
-public interface ICollectable
+namespace YJH
 {
-    public float CollectTime
+    public interface ICollectable
     {
-        get;
+        public float CollectTime
+        {
+            get;
+        }
+        public void Collect();
     }
-    public void Collect();
 }
