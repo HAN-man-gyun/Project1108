@@ -106,7 +106,7 @@ public class Player_kim : MonoBehaviour
             {
                 hitobject = hitInfo.collider.gameObject;
 
-                ObjItem objItem = hitobject.GetComponent<ObjItem>();
+                ObjItem_Kim objItem = hitobject.GetComponent<ObjItem_Kim>();
                 inventoryUI.FreshSlot(objItem.item);
             }
             else

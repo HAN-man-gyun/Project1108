@@ -10,14 +10,14 @@ using UnityEngine.UI;
 
 public class InventoryUI : MonoBehaviour
 {
-    Inventory inven;
+    Inventory_Kim inven;
 
     public GameObject slotUI;
 
     public GameObject inventoryPanel;
     bool activeInven = false;
 
-    public Slot[] slots;
+    public Slot_Kim[] slots;
     public Transform slotHolder;
 
     public Button prevButton;
@@ -38,12 +38,12 @@ public class InventoryUI : MonoBehaviour
 
     private void Awake()
     {
-        inven = Inventory.Instance;
+        inven = Inventory_Kim.Instance;
     }
     void Start()
     {
         invenNum_ = 1;
-        slots = slotHolder.GetComponentsInChildren<Slot>();
+        slots = slotHolder.GetComponentsInChildren<Slot_Kim>();
 
         inven.onSlotCountChange += SlotChange;
         inventoryPanel.SetActive(activeInven);
@@ -104,7 +104,7 @@ public class InventoryUI : MonoBehaviour
         invenNum -= 1;
     }
 
-    public void FreshSlot(Items item)
+    public void FreshSlot(Items_Kim item)
     {
         int i = 0;
         for(; i < slots.Length; i++)

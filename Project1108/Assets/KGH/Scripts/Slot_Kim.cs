@@ -4,7 +4,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Slot : MonoBehaviour
+public class Slot_Kim : MonoBehaviour
 {
     [SerializeField]
     Image image;
@@ -13,8 +13,8 @@ public class Slot : MonoBehaviour
 
     public int count;
 
-    private Items _item;
-    public Items item
+    private Items_Kim _item;
+    public Items_Kim item
     {
         get { return _item; }
         set

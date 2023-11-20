@@ -10,7 +10,7 @@ public enum ItemType
 }
 
 [System.Serializable]
-public class Items
+public class Items_Kim
 {
     public int itemCode;
     public string itemName;

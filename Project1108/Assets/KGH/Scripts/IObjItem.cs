@@ -4,5 +4,5 @@ using UnityEngine;
 
 public interface IObjItem
 {
-    Items ClickItem();
+    Items_Kim ClickItem();
 }

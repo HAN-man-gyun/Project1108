@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Inventory : MonoBehaviour
+public class Inventory_Kim : MonoBehaviour
 {
-    public static Inventory Instance;
+    public static Inventory_Kim Instance;
     private void Awake()
     {
         if(Instance != null)

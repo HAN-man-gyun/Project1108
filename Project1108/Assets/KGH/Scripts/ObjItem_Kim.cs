@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 using static UnityEditor.Progress;
 
-public class ObjItem : MonoBehaviour
+public class ObjItem_Kim : MonoBehaviour
 {
     [Header("아이템")]
-    public Items item;
+    public Items_Kim item;
     [Header("아이템 이미지")]
     public Sprite itemImage;
 
@@ -14,7 +14,7 @@ public class ObjItem : MonoBehaviour
     {
         itemImage = item.itemImage;
     }
-    public Items ClickItem()
+    public Items_Kim ClickItem()
     {
         return this.item;
     }
