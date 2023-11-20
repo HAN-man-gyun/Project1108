@@ -13,6 +13,8 @@ namespace YJH
         private const State INIT_STATE = State.IDLE;
         private const float ORIGIN_COLLECT_FASTER = 1f;
 
+        public string name;
+
         private Camera mainCam;
         private float collectFaster;
         private bool dirFix;
