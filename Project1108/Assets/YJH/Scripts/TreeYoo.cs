@@ -2,7 +2,7 @@ using UnityEngine;
 
 namespace YJH
 {
-    public class TreeYoo : CollectableYoo
+    public class TreeYoo : CollectableItem
     {
         private const string ITEM_NAME = "나무";
         private const float INIT_REGEN_TIME = 8f;
