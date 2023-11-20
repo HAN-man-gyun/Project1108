@@ -1,4 +1,5 @@
 using Photon.Pun;
+using System.Collections;
 using UnityEngine;
 
 namespace YJH
@@ -14,7 +15,8 @@ namespace YJH
 
         private Camera mainCam;
         private float collectFaster;
-        [SerializeField] private CollectableYoo collectable = null;
+        private bool dirFix;
+        [SerializeField] private CollectableItem collectable = null;
         [SerializeField] private State playerState;
         private State PlayerState
         {
@@ -45,12 +47,7 @@ namespace YJH
             moveSpeed = ORIGIN_MOVESPEED;
             collectFaster = ORIGIN_COLLECT_FASTER;
             playerState = INIT_STATE;
-        }
-
-        // Start is called before the first frame update
-        void Start()
-        {
-
+            dirFix = false;
         }
 
         // Update is called once per frame
@@ -60,27 +57,112 @@ namespace YJH
             {
                 return;
             }
+
+            //CheckCameraMove();
+            CheckForwardDirectionFix();
+            ChangeForwardDirection();
             CheckMove();
             Move();
 
-            DoCollecting();
+            if(collectable != null)
+            {
+                DoCollecting();
+            }
         }
+
+        private void SetFowardDirectionFix(bool fix)
+        {
+            if(fix == dirFix)
+            {
+                return;
+            }
+
+            dirFix = fix;
+        }
+
+        private void CheckForwardDirectionFix()
+        {
+            if (Input.GetMouseButtonDown(1))
+            {
+                if (dirFix)
+                {
+                    return;
+                }
+                SetFowardDirectionFix(true);
+            }
+
+            if (Input.GetMouseButtonUp(1))
+            {
+                if (!dirFix)
+                {
+                    return;
+                }
+                SetFowardDirectionFix(false);
+            }
+        }
+
+        //private void CheckCameraMove()
+        //{
+        //    if(Input.GetMouseButtonDown(1))
+        //    {
+        //        if(CameraManagerYoo.Instance.CamCanMove)
+        //        {
+        //            return;
+        //        }
+        //        CameraManagerYoo.Instance.SetPlayerCameraMovable(true);
+        //    }
+
+        //    if(Input.GetMouseButtonUp(1))
+        //    {
+        //        if (!CameraManagerYoo.Instance.CamCanMove)
+        //        {
+        //            return;
+        //        }
+        //        CameraManagerYoo.Instance.SetPlayerCameraMovable(false);
+        //    }
+        //}
 
         // 이동 키 누르는 중 인지 아닌지 체크해서 상태 변환하는 메서드
         private void CheckMove()
         {
+            if(playerState == State.MOVE)
+            {
+                if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S)
+                && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W))
+                {
+                    ChangeState(State.IDLE);
+                }
+                return;
+            }    
+
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S)
                 || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W))
             {
                 ChangeState(State.MOVE);
             }
-            else
+        }
+
+        private void CheckCollecting()
+        {
+            if(playerState != State.COLLECTING)
             {
-                ChangeState(State.IDLE);
+                return;
             }
         }
 
-        // IMovable 상속 시 사용해야 하는 Move 메서드
+        private void ChangeForwardDirection()
+        {
+            if(dirFix)
+            {
+                return;
+            }
+
+            Vector3 mainCamFront = mainCam.transform.forward;
+            mainCamFront.y = ZERO;
+            Vector3 dir = mainCamFront.normalized;
+            transform.forward = dir;
+        }
+
         private void Move()
         {
             if (playerState != State.MOVE)
@@ -89,15 +171,16 @@ namespace YJH
             }
 
             // 아래 3줄 + dir 메인 캠 기준 이동, 주석 처리된 dir 월드 포지션 기준 이동
-            Vector3 mainCamFront = mainCam.transform.forward;
-            Vector3 mainCamRight = mainCam.transform.right;
-            mainCamFront.y = ZERO;
+            //Vector3 mainCamFront = mainCam.transform.forward;
+            //Vector3 mainCamRight = mainCam.transform.right;
+            //mainCamFront.y = ZERO;
 
+            //Vector3 dir = (mainCamFront * axisZ + mainCamRight * axisX).normalized;
             float axisX = Input.GetAxis(HORIZONTAL);
             float axisZ = Input.GetAxis(VERTICAL);
-            Vector3 dir = (mainCamFront * axisZ + mainCamRight * axisX).normalized;
+            Vector3 dir = (transform.forward * axisZ + transform.right * axisX).normalized;
             // dir = (Vector3.right * axisX + Vector3.forward * axisZ + mainCamFront).normalized;
-            transform.forward = dir;
+            //transform.forward = dir;
             transform.position += moveSpeed * Time.deltaTime * dir;
         }
 
@@ -108,19 +191,20 @@ namespace YJH
             {
                 return;
             }
+
             playerState = toState;
         }
 
         private void CheckCollectable(Collider other)
         {
-            if (other.GetComponent<CollectableYoo>() == null)
+            if (other.GetComponent<CollectableItem>() == null)
             {
                 return;
             }
 
             if (collectable == null)
             {
-                collectable = other.GetComponent<CollectableYoo>();
+                collectable = other.GetComponent<CollectableItem>();
                 Debug.Log("스크립트 찾음");
             }
         }
@@ -132,7 +216,7 @@ namespace YJH
                 return;
             }
 
-            if (collectable.ThisState == CollectableYoo.State.Collectable && Input.GetKeyDown(KeyCode.Space))
+            if (collectable.ThisState == CollectableItem.State.Collectable && Input.GetKeyDown(KeyCode.E))
             {
                 collectable.SetCollectTime(collectable.CollectTime / collectFaster);
                 collectable.Collect();
@@ -142,14 +226,14 @@ namespace YJH
 
         private void RemoveCollectable(Collider other)
         {
-            if (other.GetComponent<CollectableYoo>() == null)
+            if (other.GetComponent<CollectableItem>() == null)
             {
                 return;
             }
 
             if (collectable != null)
             {
-                if (collectable.ThisState == CollectableYoo.State.Collecting)
+                if (collectable.ThisState == CollectableItem.State.Collecting)
                 {
                     collectable.StopCollecting();
                 }

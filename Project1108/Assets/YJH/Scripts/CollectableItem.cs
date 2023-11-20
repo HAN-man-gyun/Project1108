@@ -7,7 +7,7 @@ using Photon.Pun;
 /// </summary>
 namespace YJH
 {
-    public class CollectableYoo : MonoBehaviourPun, ICollectable
+    public class CollectableItem : MonoBehaviourPun, ICollectable
     {
         /// <summary>
         /// 채집물의 이름입니다. 미지정시 default로 설정됩니다.
