@@ -216,7 +216,7 @@ namespace YJH
                 return;
             }
 
-            if (collectable.ThisState == CollectableItem.State.Collectable && Input.GetKeyDown(KeyCode.Space))
+            if (collectable.ThisState == CollectableItem.State.Collectable && Input.GetKeyDown(KeyCode.E))
             {
                 collectable.SetCollectTime(collectable.CollectTime / collectFaster);
                 collectable.Collect();
