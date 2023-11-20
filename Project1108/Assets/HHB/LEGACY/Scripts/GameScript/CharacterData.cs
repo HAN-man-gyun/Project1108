@@ -1,13 +1,7 @@
-using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
 using PlayFab;
 using PlayFab.ClientModels;
-using System.Collections;
 using System.Collections.Generic;
-using Unity.Animations.SpringBones.GameObjectExtensions;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.Video;
 
 
 namespace LEGACY
@@ -71,7 +65,6 @@ namespace LEGACY
 
         public void ChangeMaterial(int matIndex)
         {
-            Debug.Log("changeMaterial 들어옴");
             SkinnedMeshRenderer costumeSkin = myCharacter.transform.GetChild(0).GetComponent<SkinnedMeshRenderer>();
             costumeSkin.material = costumeMaterial[matIndex];
         }
