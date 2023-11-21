@@ -4,16 +4,15 @@ using UnityEngine;
 
 namespace YJH
 {
+    // ToDo: 채집 기능 따로 분리해야함
     public class PlayerYoo : MonoBehaviourPun
     {
         private const string HORIZONTAL = "Horizontal";
         private const string VERTICAL = "Vertical";
         private const float ZERO = 0f;
-        private const float ORIGIN_MOVESPEED = 10f;
+        private const float ORIGIN_MOVESPEED = 7f;
         private const State INIT_STATE = State.IDLE;
         private const float ORIGIN_COLLECT_FASTER = 1f;
-
-        public string name;
 
         private Camera mainCam;
         private float collectFaster;

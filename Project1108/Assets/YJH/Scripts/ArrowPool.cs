@@ -1,10 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
 namespace YJH
 {
-    public class ArrowPool : MonoBehaviour
+    public class ArrowPool : MonoBehaviourPun
     {
         private static ArrowPool instance;
         public static ArrowPool Instance
@@ -17,6 +18,7 @@ namespace YJH
                 return instance; }
         }
         private const int INIT_ARROW_COUNT = 30;
+        private const int ADD_ARROW_COUNT = 10;
         [SerializeField] private GameObject arrowPrefab;
         readonly Queue<GameObject> arrowPool = new Queue<GameObject>();
 
@@ -33,20 +35,7 @@ namespace YJH
                     Destroy(gameObject);
                 }
             }
-
             InitPool();
-        }
-
-        // Start is called before the first frame update
-        private void Start()
-        {
-
-        }
-
-        // Update is called once per frame
-        private void Update()
-        {
-
         }
 
         private void InitPool()
@@ -60,8 +49,28 @@ namespace YJH
             }
         }
 
+        private void AddPool()
+        {
+            for (int i = 0; i < ADD_ARROW_COUNT; i++)
+            {
+                GameObject tempArrow = Instantiate(arrowPrefab, transform);
+                arrowPool.Enqueue(tempArrow);
+                tempArrow.SetActive(false);
+            }
+        }
+
+        //public void ShootArrowPhoton(Vector3 arrowPos, Vector3 arrowDir)
+        //{
+        //    photonView.RPC(nameof(ShootArrow), RpcTarget.All, arrowPos, arrowDir);
+        //}
+
+        //[PunRPC]
         public void ShootArrow(Vector3 arrowPos, Vector3 arrowDir)
         {
+            if(arrowPool.Count < 1)
+            {
+                AddPool();
+            }
             GameObject arrowToShoot = arrowPool.Dequeue();
             arrowToShoot.transform.SetParent(null);
             arrowToShoot.transform.position = arrowPos;
