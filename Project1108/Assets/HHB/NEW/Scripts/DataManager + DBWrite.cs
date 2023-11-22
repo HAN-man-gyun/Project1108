@@ -1,12 +1,8 @@
-using JetBrains.Annotations;
 using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using PlayFab;
 using PlayFab.ClientModels;
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using UnityEditor;
 using UnityEngine;
 
 [Serializable]
@@ -53,14 +49,20 @@ public class Character
     public int head;
     public int eye;
     public int costume;
+    public Character ReturnCharacter(int id, int head, int eye, int costume)
+    {
+        this.id = id;
+        this.head = head;
+        this.eye = eye;
+        this.costume = costume;
+        return this;
+    }
 
-    //public Character(int id, int head, int eye, int cosutme)
-    //{
-    //    this.id = id;
-    //    this.head = head;
-    //    this.eye = eye;
-    //    this.costume = cosutme;
-    //}
+    public int ReturnCostume(int costume)
+    {
+        this.costume = costume;
+        return costume;
+    }
 }
 
 [Serializable]
@@ -83,6 +85,10 @@ public class Wolf
     public int id;
     public string petName;
     public float value1;
+    public int level;
+    public float exp;
+    // level -> CSV
+    
 
     public Wolf ReturnWolf(int id, string petName, float value1)
     {
@@ -92,6 +98,7 @@ public class Wolf
         return this;
     }
 }
+
 
 [Serializable]
 public class PlayerData
@@ -103,20 +110,31 @@ public class PlayerData
     public Character character = new Character();
 }
 
-// DBRead
+
+// DB Write, Update
 public partial class DataManager : MonoBehaviour
 {
     public PlayerData playerData;
-    private Test test;
 
-    private void Awake()
+    #region DB Write/Update
+    public void UpdateToDB<T>() where T : class
     {
-        Instance = this;
-        DontDestroyOnLoad(this);
+        string className = typeof(T).Name;
+        switch (className)
+        {
+            case "Wolf":
+                UpdateToDB("Wolf", playerData.wolf);
+                break;
+            case "Character":
+                UpdateToDB("Character", playerData.character);
+                break;
+            default:
+                Debug.LogError("DB Fatal Error!");
+                break;
+        }
     }
 
-
-    public void UpdateWolfDataToDB()
+    private void UpdateToDB<T>(string className, T data) where T : class
     {
         var request = new UpdateUserDataRequest
         {
@@ -124,14 +142,64 @@ public partial class DataManager : MonoBehaviour
             Data = new Dictionary<string, string>
             {
                 {
-                    "Wolf",JsonConvert.SerializeObject(playerData.wolf)
+                    className, JsonConvert.SerializeObject(data)
                 }
+
             }
         };
         PlayFabClientAPI.UpdateUserData(request, (result) => { Debug.Log(result); }, (error) => { Debug.Log(error); });
     }
+    #endregion
+
+    //test
+    //public void UpdateToDBCharacter()
+    //{
+    //    UpdateToDB<Character>();
+    //    UpdateToDB<Wolf>();
+    //}
+
+
+    private void Awake()
+    {
+        Instance = this;
+        DontDestroyOnLoad(this);
+    }
+}
 
     #region LEGACY
+
+//    public void UpdateWolfDataToDB()
+//    {
+//        var request = new UpdateUserDataRequest
+//        {
+//            Permission = UserDataPermission.Public,
+//            Data = new Dictionary<string, string>
+//            {
+//                {
+//                    "Wolf",JsonConvert.SerializeObject(playerData.wolf)
+//                }
+//            }
+//        };
+//        PlayFabClientAPI.UpdateUserData(request, (result) => { Debug.Log(result); }, (error) => { Debug.Log(error); });
+//    }
+
+//    public void UpdateCharacterDataToDB()
+//    {
+//        var request = new UpdateUserDataRequest
+//        {
+//            Permission = UserDataPermission.Public,
+//            Data = new Dictionary<string, string>
+//            {
+//                {
+//                    "Character",JsonConvert.SerializeObject(playerData.character)
+//                } 
+//            }
+//        };
+//        PlayFabClientAPI.UpdateUserData(request, (result) => { Debug.Log(result); }, (error) => { Debug.Log(error); });
+//    }
+
+//}
+
     //public void SaveWolfData()
     //{
     //    test = GFUNC.FindTopLevelGameObject("Test").GetComponent<Test>();
@@ -181,4 +249,3 @@ public partial class DataManager : MonoBehaviour
     //    wolf.value1 = Datavalue;
     //}
     #endregion
-}
