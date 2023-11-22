@@ -109,6 +109,11 @@ namespace YJH
         /// </summary>
         protected virtual IEnumerator Collecting()
         {
+            if(state == State.Collecting)
+            {
+                yield break;
+            }
+
             state = State.Collecting;
             float time = 0f;
             while (time < collectTime)
@@ -139,6 +144,11 @@ namespace YJH
         /// </summary>
         protected virtual IEnumerator Regenerate()
         {
+            if(state != State.Collected)
+            {
+                yield break;
+            }
+
             float time = 0f;
             while (time < regenTime)
             {

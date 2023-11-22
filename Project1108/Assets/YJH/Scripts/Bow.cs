@@ -5,6 +5,7 @@ using UnityEngine;
 
 namespace YJH
 {
+    // ToDo: 시점 변환 기능이랑 활 쏘는 기능 분리 해야 함
     public class Bow : MonoBehaviour
     {
         private const string AIMING_CAM = "PlayerAiming";
@@ -27,6 +28,7 @@ namespace YJH
             {
                 aimingCam.Priority = 20;
                 aimingCam.m_XAxis.Value = freeLookCam.m_XAxis.Value;
+                aimingCam.m_YAxis.Value = 0.5f;
             }
 
             if (Input.GetMouseButton(0))
