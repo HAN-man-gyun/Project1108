@@ -52,8 +52,11 @@ public partial class Lobby : MonoBehaviour
             characterUI.gameObject.SetActive(true);
             CameraManager.Instance.SetCharacterCamera(character);
             //
-            Test test = GFUNC.FindTopLevelGameObject("Test").GetComponent<Test>();
-            test.InitDBWolfData();
+            //Test test = GFUNC.FindTopLevelGameObject("Test").GetComponent<Test>();
+            //test.InitDBWolfData();
+
+            PlayerCustom player = GFUNC.FindTopLevelGameObject("Player").GetComponent<PlayerCustom>();
+            player.InitDBCharacterData();
         },
         (error) => loginInfoTxt.text = "Login Failed");
     }

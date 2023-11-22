@@ -11,7 +11,7 @@ public class Test : MonoBehaviour
     public string petName;
     public float value1;
 
-    public string test;
+    
 
     public void ApplyWolfDataToDataManager()
     {
