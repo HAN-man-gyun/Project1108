@@ -14,6 +14,17 @@ namespace YJH
         private const State INIT_STATE = State.IDLE;
         private const float ORIGIN_COLLECT_FASTER = 1f;
 
+        private Animator animator;
+        public Animator Animator
+        {
+            get
+            {
+                return animator;
+            }
+        }
+        
+        private Fsm playerFsm;
+
         private Camera mainCam;
         private float collectFaster;
         private bool dirFix;
@@ -27,8 +38,8 @@ namespace YJH
             }
         }
 
-        [SerializeField] private float moveSpeed;
-        private float MoveSpeed
+        private float moveSpeed;
+        public float MoveSpeed
         {
             get
             {
@@ -39,7 +50,7 @@ namespace YJH
         // 플레이어 상태를 나타내는 열거 형식
         enum State
         {
-            IDLE, MOVE, FISHING, HARVESTING, COLLECTING
+            IDLE, MOVE, FARMING, GATHERING
         }
 
         void Awake()
@@ -49,6 +60,7 @@ namespace YJH
             collectFaster = ORIGIN_COLLECT_FASTER;
             playerState = INIT_STATE;
             dirFix = false;
+            playerFsm = new Fsm(new IdleState(this));
         }
 
         // Update is called once per frame
@@ -62,8 +74,8 @@ namespace YJH
             //CheckCameraMove();
             CheckForwardDirectionFix();
             ChangeForwardDirection();
-            CheckMove();
-            Move();
+            CheckMoving();
+            playerFsm.UpdateState();
 
             if(collectable != null)
             {
@@ -83,6 +95,11 @@ namespace YJH
 
         private void CheckForwardDirectionFix()
         {
+            if (playerState != State.IDLE && playerState != State.MOVE)
+            {
+                return;
+            }
+
             if (Input.GetMouseButtonDown(1))
             {
                 if (dirFix)
@@ -124,17 +141,21 @@ namespace YJH
         //}
 
         // 이동 키 누르는 중 인지 아닌지 체크해서 상태 변환하는 메서드
-        private void CheckMove()
+        public void CheckMoving()
         {
-            if(playerState == State.MOVE)
+            if(PlayerState == State.MOVE)
             {
                 if (!Input.GetKey(KeyCode.A) && !Input.GetKey(KeyCode.S)
                 && !Input.GetKey(KeyCode.D) && !Input.GetKey(KeyCode.W))
                 {
                     ChangeState(State.IDLE);
                 }
-                return;
             }    
+
+            if(PlayerState != State.IDLE)
+            {
+                return;
+            }
 
             if (Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.S)
                 || Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.W))
@@ -145,7 +166,7 @@ namespace YJH
 
         private void CheckCollecting()
         {
-            if(playerState != State.COLLECTING)
+            if(playerState != State.GATHERING)
             {
                 return;
             }
@@ -192,8 +213,22 @@ namespace YJH
             {
                 return;
             }
-
             playerState = toState;
+            switch(playerState)
+            {
+                case State.IDLE:
+                    playerFsm.ChangeState(new IdleState(this));
+                    break;
+                case State.MOVE:
+                    playerFsm.ChangeState(new MoveState(this));
+                    break;
+                case State.GATHERING:
+                    playerFsm.ChangeState(new GatheringState(this));
+                    break;
+                case State.FARMING:
+                    playerFsm.ChangeState(new FarmingState(this));
+                    break;
+            }
         }
 
         private void CheckCollectable(Collider other)
@@ -242,6 +277,8 @@ namespace YJH
                 Debug.Log("스크립트를 버렸습니다");
             }
         }
+
+
 
         private void OnTriggerEnter(Collider other)
         {
